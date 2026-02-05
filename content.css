@@ -1,0 +1,195 @@
+.orlink-box {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid #e1e4e8;
+  border-radius: 10px;
+  background: #fbfbfd;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+.orlink-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.orlink-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* slightly larger OpenReview logo */
+.orlink-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+}
+
+.orlink-headtext {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.orlink-titletext {
+  font-weight: 800;
+  font-size: 13px;
+  color: #1849c6;
+}
+
+.orlink-status {
+  color: #444;
+  font-size: 12px;
+}
+
+.orlink-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.orlink-btn {
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+  display: inline-block;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid #c9d4ff;
+  background: #eef3ff;
+  color: #1849c6;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.orlink-btn.primary {
+  border-color: #2f6fef;
+  background: #2f6fef;
+  color: white;
+}
+
+.orlink-btn:hover { filter: brightness(0.98); }
+
+.orlink-error {
+  color: #b00020;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.orlink-versions {
+  margin-top: 10px;
+  border-top: 1px dashed #e1e4e8;
+  padding-top: 10px;
+}
+
+.orlink-versions-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+/* REAL bullets even if arXiv page CSS overrides lists */
+.orlink-versions-list {
+  margin: 0;
+  padding-left: 18px;
+  list-style: disc !important;
+  list-style-position: outside !important;
+}
+
+.orlink-versions-list li {
+  display: list-item !important;
+  margin: 6px 0;
+}
+
+.orlink-versions-list li::marker {
+  color: #444;
+}
+
+.orlink-version-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.orlink-version {
+  font-size: 13px;
+  text-decoration: none;
+  color: #1849c6;
+  font-weight: 600;
+}
+
+.orlink-version:hover { text-decoration: underline; }
+
+/* BibTeX copy button */
+.orlink-cite-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 1px solid #c9d4ff;
+  background: #eef3ff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.orlink-cite-btn:hover { filter: brightness(0.98); }
+.orlink-cite-btn:active { transform: translateY(1px); }
+
+.orlink-cite-btn svg { width: 18px; height: 18px; fill: #1849c6; }
+
+.orlink-cite-btn.loading svg { animation: orlink-spin 0.9s linear infinite; }
+
+@keyframes orlink-spin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
+
+.orlink-cite-btn.done {
+  border-color: #1b8f3a;
+  background: #eaf8ef;
+}
+
+.orlink-cite-btn.done svg { fill: #1b8f3a; animation: none; }
+
+/* Refresh (redo search) button */
+.orlink-refresh-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid #c9d4ff;
+  background: #eef3ff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.orlink-refresh-btn:hover { filter: brightness(0.98); }
+.orlink-refresh-btn:active { transform: translateY(1px); }
+.orlink-refresh-btn svg { width: 20px; height: 20px; fill: #1849c6; }
+.orlink-refresh-btn.loading svg { animation: orlink-spin 0.9s linear infinite reverse; }
+
+
+/* Mobile layout fixes (arXiv responsive view) */
+@media (max-width: 768px) {
+  .orlink-box {
+    overflow: hidden; /* keep markers and content inside */
+  }
+  .orlink-actions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .orlink-btn {
+    max-width: 100%;
+    white-space: nowrap; /* keep 'Open Forum' visible */
+  }
+  .orlink-versions-list {
+    padding-left: 18px !important;
+    margin-left: 0 !important;
+    list-style-position: inside !important; /* keep bullets inside the box */
+  }
+}
