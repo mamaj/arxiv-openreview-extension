@@ -257,7 +257,7 @@
   }
 
   document.addEventListener('click', (ev) => {
-    const refresh = ev.target.closest && ev.target.closest('.orlink-refresh-btn');
+    const refresh = closestFromTarget(ev.target, '.orlink-refresh-btn');
     if (refresh) {
       ev.preventDefault();
       ev.stopPropagation();
@@ -265,7 +265,7 @@
       return;
     }
 
-    const btn = ev.target.closest && ev.target.closest('.orlink-cite-btn');
+    const btn = closestFromTarget(ev.target, '.orlink-cite-btn');
     if (!btn) return;
 
     ev.preventDefault();
@@ -305,6 +305,10 @@
 
   function escapeAttr(s) {
     return String(s).replace(/"/g, '&quot;');
+  }
+
+  function closestFromTarget(target, selector) {
+    return target instanceof Element ? target.closest(selector) : null;
   }
 
   // Provide page info to the extension popup

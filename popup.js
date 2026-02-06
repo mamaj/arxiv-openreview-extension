@@ -38,10 +38,10 @@
   }
 
   document.addEventListener('click', (ev) => {
-    const refresh = ev.target.closest && ev.target.closest('.orlink-refresh-btn');
+    const refresh = closestFromTarget(ev.target, '.orlink-refresh-btn');
     if (refresh) { ev.preventDefault(); ev.stopPropagation(); triggerLookup(true); return; }
 
-    const btn = ev.target.closest && ev.target.closest('.orlink-cite-btn');
+    const btn = closestFromTarget(ev.target, '.orlink-cite-btn');
     if (!btn) return;
     ev.preventDefault(); ev.stopPropagation();
     const forumId = (btn.getAttribute('data-forum-id') || '').trim();
@@ -129,6 +129,7 @@
     if (state === 'loading') btn.classList.add('loading');
     if (!btn.innerHTML) btn.innerHTML = iconRefresh();
   }
+  function closestFromTarget(target, selector) { return target instanceof Element ? target.closest(selector) : null; }
   function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   function escapeAttr(s) { return String(s).replace(/"/g,'&quot;'); }
 })();

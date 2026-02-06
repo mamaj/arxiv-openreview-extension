@@ -121,6 +121,7 @@
   padding: 0 !important;
   padding-left: 0 !important;
   list-style: none !important;
+  counter-reset: orlink-version;
 }
 
 .orlink-versions-list li {
@@ -130,6 +131,7 @@
   margin: 6px 0 !important;
   padding: 0 !important;
   list-style: none !important;
+  counter-increment: orlink-version;
 }
 
 .orlink-versions-list li::marker {
@@ -137,10 +139,12 @@
 }
 
 .orlink-versions-list li::before {
-  content: "\2022";
+  content: "[" counter(orlink-version) "]";
   flex: 0 0 auto;
   color: #7b879e;
   line-height: 1.2;
+  font-weight: 700;
+  font-size: 12px;
 }
 
 .orlink-version-row {
