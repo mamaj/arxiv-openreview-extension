@@ -118,7 +118,7 @@
   }
 
   function iconRefresh() {
-    return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.65 6.35A7.95 7.95 0 0012 4V1L7 6l5 5V7c2.76 0 5 2.24 5 5a5 5 0 01-9.9 1H5a7 7 0 1012.65-6.65z"></path></svg>`;
+    return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.36 5.64A8.95 8.95 0 0012 3C7.03 3 3 7.03 3 12h2a7 7 0 017-7c1.77 0 3.39.66 4.62 1.74L14 9h7V2l-2.64 2.64zM21 12h-2a7 7 0 01-7 7c-1.77 0-3.39-.66-4.62-1.74L10 15H3v7l2.64-2.64A8.95 8.95 0 0012 21c4.97 0 9-4.03 9-9z"></path></svg>`;
   }
   function iconQuote() {
     return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.17 6A5 5 0 002 11v7h7v-7H6.5a2.5 2.5 0 012.45-2.5H9V6H7.17zm10 0A5 5 0 0012 11v7h7v-7h-2.5a2.5 2.5 0 012.45-2.5H19V6h-1.83z"></path></svg>`;

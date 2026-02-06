@@ -58,21 +58,42 @@ body { margin: 0; padding: 10px; width: 360px; }
   white-space: nowrap;
   overflow: visible;
   text-overflow: clip;
-  display: inline-block;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
   padding: 7px 10px;
   border-radius: 8px;
   border: 1px solid #c9d4ff;
   background: #eef3ff;
-  color: #1849c6;
+  color: #1849c6 !important;
+  -webkit-text-fill-color: #1849c6;
   text-decoration: none;
   font-weight: 600;
   font-size: 14px;
 }
 
+.orlink-btn:visited,
+.orlink-btn:hover,
+.orlink-btn:focus,
+.orlink-btn:active {
+  color: #1849c6 !important;
+  -webkit-text-fill-color: #1849c6;
+}
+
 .orlink-btn.primary {
   border-color: #2f6fef;
   background: #2f6fef;
-  color: white;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff;
+}
+
+.orlink-btn.primary:visited,
+.orlink-btn.primary:hover,
+.orlink-btn.primary:focus,
+.orlink-btn.primary:active {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff;
 }
 
 .orlink-btn:hover { filter: brightness(0.98); }
@@ -96,27 +117,40 @@ body { margin: 0; padding: 10px; width: 360px; }
   margin-bottom: 6px;
 }
 
-/* REAL bullets even if arXiv page CSS overrides lists */
 .orlink-versions-list {
-  margin: 0;
-  padding-left: 18px;
-  list-style: disc !important;
-  list-style-position: outside !important;
+  margin: 0 !important;
+  margin-left: 0 !important;
+  padding: 0 !important;
+  padding-left: 0 !important;
+  list-style: none !important;
 }
 
 .orlink-versions-list li {
-  display: list-item !important;
-  margin: 6px 0;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+  margin: 6px 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
 }
 
 .orlink-versions-list li::marker {
-  color: #444;
+  content: "" !important;
+}
+
+.orlink-versions-list li::before {
+  content: "\2022";
+  flex: 0 0 auto;
+  color: #7b879e;
+  line-height: 1.2;
 }
 
 .orlink-version-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  min-width: 0;
+  flex: 1 1 auto;
   gap: 10px;
 }
 
@@ -178,20 +212,12 @@ body { margin: 0; padding: 10px; width: 360px; }
 
 /* Mobile layout fixes (arXiv responsive view) */
 @media (max-width: 768px) {
-  .orlink-box {
-    overflow: hidden; /* keep markers and content inside */
-  }
   .orlink-actions {
     flex-wrap: wrap;
     gap: 8px;
   }
   .orlink-btn {
     max-width: 100%;
-    white-space: nowrap; /* keep 'Open Forum' visible */
-  }
-  .orlink-versions-list {
-    padding-left: 18px !important;
-    margin-left: 0 !important;
-    list-style-position: inside !important; /* keep bullets inside the box */
+    white-space: nowrap;
   }
 }
