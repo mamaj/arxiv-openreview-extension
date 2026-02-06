@@ -2,7 +2,7 @@
 
 A Chrome extension that adds a compact OpenReview panel directly to arXiv abstract pages, so you can jump from a paper to its OpenReview forum in one click.
 
-![Panel desktop](screenshots/arxiv_screenshot.png)
+![Panel desktop](screenshots/arXiv_screenshot.png)
 
 **Why this extension:**
 
