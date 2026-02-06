@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "arXiv → OpenReview Linker",
-  "version": "1.7.4.7",
-  "description": "v1.7.4.7 mobile fixes + larger icons.",
+  "version": "1.7.4",
+  "description": "v1.7.4 mobile fixes + larger icons.",
   "permissions": [
     "storage",
     "tabs",
