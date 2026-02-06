@@ -1,7 +1,90 @@
-# arXiv → OpenReview Linker (v1.7.4.6)
+# arXiv -> OpenReview Linker
 
-Changes:
-- Cache is per arXiv version (e.g. 2405.17394 vs 2405.17394v1 are distinct).
-- Refresh icon is larger and spins in the same direction as the arrow.
-- Copy BibTeX icon is slightly larger.
-- Toolbar icon opens a popup panel that mirrors the sidebar (on arXiv abs pages).
+A Chrome extension that adds a compact OpenReview panel directly on arXiv abstract pages, so you can jump from a paper to its OpenReview forum in one click.
+
+## Why this extension
+
+When reading papers on arXiv, finding the matching OpenReview discussion is often manual and repetitive.  
+This extension automates that lookup and keeps the result next to the paper metadata.
+
+## Features
+
+- Finds matching OpenReview forums from arXiv abstract pages.
+- Lists discovered OpenReview versions/venues.
+- Copies BibTeX from OpenReview with one click
+- Uses local caching for faster repeat lookups
+
+## How it works
+
+1. Extract paper title and arXiv ID from the current arXiv abstract page.
+2. Query OpenReview search (title-based).
+3. Match exact normalized title.
+4. Open the forum to gather versions/venue labels.
+5. On demand, fetch BibTeX from the selected forum.
+
+## Installation (Developer Mode)
+
+1. Clone or download this repository.
+2. Open `chrome://extensions`.
+3. Enable `Developer mode`.
+4. Click `Load unpacked`.
+5. Select this project folder.
+6. Open any arXiv abstract page and use the injected panel or toolbar popup.
+
+## Usage
+
+1. Go to an arXiv abstract page like `https://arxiv.org/abs/xxxx.xxxxx`.
+2. Wait for the `OpenReview` box to appear in the right column.
+3. Click `Open Forum` to open the matched forum.
+4. Use the versions list to open specific versions.
+5. Click the quote icon to copy BibTeX.
+6. Use the refresh button to force a fresh lookup.
+
+## Permissions explained
+
+- `storage`: cache lookup/BibTeX results locally
+- `tabs`: open background tabs for scraping OpenReview pages
+- `scripting`: execute extraction scripts in created tabs
+- Host permissions:
+- `https://arxiv.org/*`
+- `https://openreview.net/*`
+
+## Privacy
+
+- No backend server is used by this project.
+- Data is stored locally in `chrome.storage.local` for caching.
+- No analytics or tracking code is included in this repository.
+
+## Known limitations
+
+- Matching is title-based; if OpenReview title metadata differs significantly, lookup may fail.
+- OpenReview UI changes can affect scraping and may require extension updates.
+- BibTeX extraction depends on OpenReview page rendering and available controls.
+
+## Project structure
+
+- `manifest.json`: extension manifest (MV3)
+- `content.js`, `content.css`: injected arXiv panel UI/logic
+- `background.js`: lookup, scraping, caching, BibTeX fetching
+- `popup.html`, `popup.js`, `popup.css`: toolbar popup UI/logic
+- `icons/`: extension icon assets
+
+## Development notes
+
+- No build step is required (plain JavaScript/CSS).
+- After code changes, reload the extension in `chrome://extensions`.
+- If behavior seems stale, refresh the arXiv page after reloading the extension.
+
+## Contributing
+
+Issues and pull requests are welcome.  
+Please include:
+
+- clear reproduction steps
+- expected vs actual behavior
+- browser version
+- example arXiv URL(s), when relevant
+
+## License
+
+Add your license here (for example `MIT`) before publishing publicly.
