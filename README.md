@@ -1,11 +1,21 @@
 # arXiv -> OpenReview Linker
 
-A Chrome extension that adds a compact OpenReview panel directly on arXiv abstract pages, so you can jump from a paper to its OpenReview forum in one click.
+A Chrome extension that adds a compact OpenReview panel directly to arXiv abstract pages, so you can jump from a paper to its OpenReview forum in one click.
 
-## Why this extension
+![Panel desktop](screenshots/arxiv_screenshot.png)
 
-When reading papers on arXiv, finding the matching OpenReview discussion is often manual and repetitive.  
-This extension automates that lookup and keeps the result next to the paper metadata.
+**Why this extension:**
+
+When reading papers on arXiv, ML researchers often need to check OpenReview to:
+
+- See which conference the paper was submitted to or accepted at  
+- Read the discussion and reviews  
+- Grab the official proceedings BibTeX  
+
+Finding the matching OpenReview page is usually a manual, repetitive search.
+
+This extension automates that lookup and surfaces the result right next to the arXiv metadata, making it easier to move between the paper and its discussion.
+
 
 ## Features
 
