@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "arXiv → OpenReview Linker",
+  "name": "arXiv to OpenReview",
   "version": "1.7.4",
   "description": "v1.7.4 mobile fixes + larger icons.",
   "permissions": [
@@ -30,7 +30,7 @@
     }
   ],
   "action": {
-    "default_title": "arXiv → OpenReview Linker",
+    "default_title": "arXiv to OpenReview",
     "default_popup": "popup.html"
   },
   "icons": {

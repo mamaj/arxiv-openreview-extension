@@ -14,7 +14,7 @@ Find matching OpenReview forums from arXiv abstract pages and copy BibTeX in one
 
 ### Full Description
 
-arXiv -> OpenReview Linker adds an OpenReview panel directly to arXiv abstract pages so you can quickly jump from a paper to its OpenReview forum.
+arXiv to OpenReview adds an OpenReview panel directly to arXiv abstract pages so you can quickly jump from a paper to its OpenReview forum.
 
 What it does:
 
@@ -40,7 +40,7 @@ Notes:
 Current manifest snapshot (from this repo):
 
 - `manifest_version`: `3`
-- `name`: `arXiv → OpenReview Linker`
+- `name`: `arXiv to OpenReview`
 - `version`: `1.7.4`
 - `permissions`: `storage`, `tabs`, `scripting`
 - `host_permissions`: `https://openreview.net/*`, `https://arxiv.org/*`
@@ -53,18 +53,18 @@ Pre-upload checks:
 - Replace the current release-style `description` with a stable product description.
   Example: `Find matching OpenReview forums from arXiv pages and copy BibTeX quickly.`
 
-2. Verify assets:
+1. Verify assets:
 - `icons/icon16.png`, `icons/icon48.png`, `icons/icon128.png` are present and clean.
 - Add real screenshots under `screenshots/` for listing use.
 
-3. Verify runtime behavior:
+1. Verify runtime behavior:
 - Test on multiple `https://arxiv.org/abs/*` pages.
 - Confirm popup works and no console errors in:
   - content script context
   - service worker (`background.js`)
   - popup
 
-4. Privacy and permissions disclosure prep:
+1. Privacy and permissions disclosure prep:
 - Explain why each permission is required:
   - `storage`: local cache
   - `tabs`: open background tabs for lookup
@@ -73,14 +73,14 @@ Pre-upload checks:
   - arXiv pages for injection
   - OpenReview pages for lookup/scraping
 
-5. Store listing readiness:
+1. Store listing readiness:
 - Short description
 - Full description
 - Screenshots
 - Category and language
 - Support email / homepage (if available)
 
-6. Policy/compliance:
+1. Policy/compliance:
 - Complete Chrome Web Store privacy/data usage form accurately.
 - If required by your selected disclosures, provide a privacy policy URL.
 
@@ -99,7 +99,7 @@ mkdir -p dist
 Create upload zip (excludes git metadata and macOS junk):
 
 ```bash
-zip -r dist/arxiv-openreview-linker-v1.7.4.zip . \
+zip -r dist/arxiv2openreview-v1.7.4.zip . \
   -x "*.git*" \
   -x "dist/*" \
   -x "*.DS_Store" \
@@ -109,7 +109,7 @@ zip -r dist/arxiv-openreview-linker-v1.7.4.zip . \
 Optional: validate zip contents quickly:
 
 ```bash
-unzip -l dist/arxiv-openreview-linker-v1.7.4.zip | head -n 40
+unzip -l dist/arxiv2openreview-v1.7.4.zip | head -n 40
 ```
 
-Then upload `dist/arxiv-openreview-linker-v1.7.4.zip` in the Chrome Web Store Developer Dashboard.
+Then upload `dist/arxiv2openreview-v1.7.4.zip` in the Chrome Web Store Developer Dashboard.
