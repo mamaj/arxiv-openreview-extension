@@ -87,4 +87,4 @@ Please include:
 
 ## License
 
-Add your license here (for example `MIT`) before publishing publicly.
+MIT. See `/Users/reza/Projects/arxiv-openreview-extension/LICENSE`.
