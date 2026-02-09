@@ -2,7 +2,7 @@
 // Lookup flow:
 // 1) OpenReview /search in background tab -> scrape results, exact-title match.
 // 2) Open matched forum page -> scrape versions dropdown labels.
-// 3) If only one version/no dropdown, scrape venue line such as "Submitted to NeurIPS 2025".
+// 3) If only one version/no dropdown, scrape concise venue metadata (e.g., folder-icon item).
 // BibTeX flow (lazy):
 // - On demand per forum id, open its forum page, click "Show Bibtex" and scrape BibTeX.
 // - Robust extraction: only accept text that contains a BibTeX entry (line begins with '@').
@@ -224,13 +224,10 @@ async function scrapeForumVersionsAndVenue(forumId) {
 function scrapeForumVersions() {
   const versions = [];
   const seen = new Set();
+  const MAX_VERSION_LABEL_CHARS = 120;
+  const MAX_VERSION_LABEL_WORDS = 18;
 
-  const btnCandidates = Array.from(document.querySelectorAll('button, [role="button"], a'));
-  const versionBtn = btnCandidates.find(el => {
-    const t = (el.innerText || el.textContent || '').replace(/\s+/g,' ').trim().toLowerCase();
-    const aria = (el.getAttribute && (el.getAttribute('aria-label') || '')).toLowerCase();
-    return /^\d+\s+versions$/.test(t) || /\bversions\b/.test(t) || /\bversions\b/.test(aria);
-  });
+  const versionBtn = findVersionsButton();
   if (versionBtn && versionBtn.click) {
     try { versionBtn.click(); } catch {}
   }
@@ -249,9 +246,9 @@ function scrapeForumVersions() {
     }
     if (!id) continue;
 
-    const label = (a.innerText || a.textContent || '').replace(/\s+/g,' ').trim();
+    const label = sanitizeVersionLabel(a.innerText || a.textContent || '');
     if (!label || label.length < 6) continue;
-    if (!/(19|20)\d{2}/.test(label) && !/submitted|workshop|corr|neurips|iclr|icml|tmlr/i.test(label)) continue;
+    if (!isLikelyVersionOrVenueLabel(label)) continue;
 
     const key = id + '::' + label;
     if (seen.has(key)) continue;
@@ -262,20 +259,57 @@ function scrapeForumVersions() {
   return { versions, singleVenue: pickSingleVenueLabel() };
 
   function pickSingleVenueLabel() {
-    const nodes = Array.from(document.querySelectorAll('span, div, p, a'));
+    // Single-version case: extract the text that sits in the same "item"
+    // as the folder icon (glyphicon-folder-open) on OpenReview forum pages.
+    const folderIcons = Array.from(document.querySelectorAll('.glyphicon.glyphicon-folder-open, .glyphicon-folder-open'));
+    for (const icon of folderIcons) {
+      const container = icon.closest('.item') || icon.parentElement;
+      const label = sanitizeVersionLabel(container ? (container.innerText || container.textContent || '') : '');
+      if (!label) continue;
+      if (/submitted to/i.test(label) || isLikelyVersionOrVenueLabel(label)) return label;
+    }
+
+    // Backup: keep generic "Submitted to ..." extraction without conference names.
+    const nodes = Array.from(document.querySelectorAll('span, div, p, a')).slice(0, 350);
     for (const el of nodes) {
-      const t = (el.innerText || el.textContent || '').replace(/\s+/g, ' ').trim();
+      const t = sanitizeVersionLabel(el.innerText || el.textContent || '');
       if (!t) continue;
       if (/^Submitted to\s+/i.test(t)) return t;
-    }
-    for (const el of nodes.slice(0, 250)) {
-      const t = (el.innerText || el.textContent || '').replace(/\s+/g, ' ').trim();
-      if (!t) continue;
-      if (/\bNeurIPS\s+20\d{2}\b/i.test(t) || /\bICLR\s+20\d{2}\b/i.test(t) || /\bICML\s+20\d{2}\b/i.test(t)) {
-        return 'Submitted to ' + t;
-      }
+      if (isLikelyVersionOrVenueLabel(t)) return t;
     }
     return null;
+  }
+
+  function findVersionsButton() {
+    const btnCandidates = Array.from(document.querySelectorAll('button, [role="button"], a'));
+    return btnCandidates.find(el => {
+      const t = (el.innerText || el.textContent || '').replace(/\s+/g, ' ').trim();
+      const aria = (el.getAttribute && (el.getAttribute('aria-label') || '')).replace(/\s+/g, ' ').trim();
+      return /^\d+\s+versions?$/i.test(t) || /^\d+\s+versions?$/i.test(aria);
+    }) || null;
+  }
+
+  function isLikelyVersionOrVenueLabel(text) {
+    const t = String(text || '').trim();
+    if (!t) return false;
+    if (/^Submitted to\s+/i.test(t)) return true;
+
+    // Generic cues only (no conference-name matching).
+    const hasYear = /(19|20)\d{2}/.test(t);
+    const hasMonthYear = /\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\b[\s,/-]*(19|20)\d{2}/i.test(t);
+    const hasDecisionWord = /\b(?:oral|poster|spotlight|workshop|accept|accepted|reject|rejected|withdrawn|conditional)\b/i.test(t);
+    return hasYear || hasMonthYear || hasDecisionWord;
+  }
+
+  function sanitizeVersionLabel(raw) {
+    let label = String(raw || '').replace(/\s+/g, ' ').trim();
+    if (!label) return '';
+
+    if (!label || label.length > MAX_VERSION_LABEL_CHARS) return '';
+    if (label.split(/\s+/).length > MAX_VERSION_LABEL_WORDS) return '';
+    if (/openreview\.net notifications|activity tasks|keywords:|abstract:/i.test(label)) return '';
+    if (/authors|published:|last modified|everyone revisions|go to/i.test(label)) return '';
+    return label;
   }
 }
 
