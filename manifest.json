@@ -1,18 +1,16 @@
 {
   "manifest_version": 3,
   "name": "arXiv to OpenReview",
-  "version": "1.7.4",
-  "description": "v1.7.4 mobile fixes + larger icons.",
+  "version": "1.8",
+  "description": "Find matching OpenReview forums from arXiv pages and copy BibTeX.",
   "permissions": [
     "storage",
-    "tabs",
-    "scripting"
+    "tabs"
   ],
   "host_permissions": [
     "https://openreview.net/*",
     "https://api2.openreview.net/*",
-    "https://api.openreview.net/*",
-    "https://arxiv.org/*"
+    "https://api.openreview.net/*"
   ],
   "background": {
     "service_worker": "background.js"
