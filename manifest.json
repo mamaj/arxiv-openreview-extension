@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "arXiv to OpenReview",
-  "version": "1.8",
+  "version": "1.8.1",
   "description": "Find matching OpenReview forums from arXiv pages and copy BibTeX.",
   "permissions": [
     "storage",
@@ -10,7 +10,8 @@
   "host_permissions": [
     "https://openreview.net/*",
     "https://api2.openreview.net/*",
-    "https://api.openreview.net/*"
+    "https://api.openreview.net/*",
+    "https://arxiv.org/*"
   ],
   "background": {
     "service_worker": "background.js"

@@ -4,14 +4,27 @@
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const url = tab?.url || '';
 
-  if (!/^https:\/\/arxiv\.org\/abs\//.test(url)) {
-    root.innerHTML = `<div class="orlink-box"><div class="orlink-status">Open an arXiv abstract page (arxiv.org/abs/...) and click the icon again.</div></div>`;
+  const ctx = parseArxivContext(url);
+  if (!ctx.supported) {
+    root.innerHTML = `<div class="orlink-box"><div class="orlink-status">Open an arXiv paper page (/abs, /pdf, or /html) and click the icon again.</div></div>`;
     return;
   }
 
-  const info = await chrome.tabs.sendMessage(tab.id, { type: 'ORLINK_GET_PAGE_INFO' }).catch(() => null);
-  const title = info?.title || '';
-  const arxivId = info?.arxivId || '';
+  const info = ctx.kind === 'abs'
+    ? await chrome.tabs.sendMessage(tab.id, { type: 'ORLINK_GET_PAGE_INFO' }).catch(() => null)
+    : null;
+
+  const arxivId = info?.arxivId || ctx.arxivId || '';
+  let title = info?.title || '';
+  if (!title) {
+    title = await fetchArxivTitleFromAbs(ctx.absUrl).catch(() => '');
+  }
+
+  if (!title) {
+    root.innerHTML = `<div class="orlink-box"><div class="orlink-status">Could not extract title for arXiv ID ${escapeHtml(arxivId || 'unknown')}.</div></div>`;
+    return;
+  }
+
   const searchUrl = buildSearchUrl(title);
   const box = createBox(searchUrl);
   root.appendChild(box);
@@ -64,6 +77,45 @@
     u.searchParams.set('source', 'forum');
     u.searchParams.set('sort', 'cdate:desc');
     return u.toString();
+  }
+
+  function parseArxivContext(rawUrl) {
+    try {
+      const u = new URL(rawUrl);
+      if (u.origin !== 'https://arxiv.org') return { supported: false };
+      const p = u.pathname;
+
+      let id = '';
+      let kind = '';
+      if (/^\/abs\/[^/?#]+/.test(p)) {
+        kind = 'abs';
+        id = decodeURIComponent((p.match(/^\/abs\/([^/?#]+)/) || [])[1] || '');
+      } else if (/^\/pdf\/[^/?#]+/.test(p)) {
+        kind = 'pdf';
+        id = decodeURIComponent((p.match(/^\/pdf\/([^/?#]+)/) || [])[1] || '').replace(/\.pdf$/i, '');
+      } else if (/^\/html\/[^/?#]+/.test(p)) {
+        kind = 'html';
+        id = decodeURIComponent((p.match(/^\/html\/([^/?#]+)/) || [])[1] || '');
+      }
+
+      if (!id) return { supported: false };
+      return { supported: true, kind, arxivId: id, absUrl: `https://arxiv.org/abs/${encodeURIComponent(id)}` };
+    } catch {
+      return { supported: false };
+    }
+  }
+
+  async function fetchArxivTitleFromAbs(absUrl) {
+    const res = await fetch(absUrl, { credentials: 'omit' });
+    if (!res.ok) throw new Error(`Failed to fetch abs page (${res.status})`);
+    const html = await res.text();
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const h1 = doc.querySelector('h1.title');
+    if (!h1) return '';
+    const clone = h1.cloneNode(true);
+    const label = clone.querySelector('.descriptor');
+    if (label) label.remove();
+    return (clone.textContent || '').replace(/\s+/g, ' ').trim();
   }
 
   function createBox(searchUrl) {
