@@ -28,10 +28,11 @@ This extension automates that lookup and surfaces the result right next to the a
 ## How it works
 
 1. Extract paper title and arXiv ID from the current arXiv abstract page.
-2. Query OpenReview search (title-based).
-3. Match exact normalized title.
-4. Open the forum to gather versions/venue labels.
-5. On demand, fetch BibTeX from the selected forum.
+2. Open a background tab to OpenReview search (title-based) and scrape rendered results.
+3. Match exact normalized title to get the forum ID.
+4. Open the matched forum in another background tab and parse version/venue metadata.
+5. Return links to the panel/popup and cache the result locally.
+6. On demand, open the forum in background again to fetch and copy BibTeX.
 
 ## Installation (Developer Mode)
 
