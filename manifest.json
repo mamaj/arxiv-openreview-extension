@@ -10,6 +10,8 @@
   ],
   "host_permissions": [
     "https://openreview.net/*",
+    "https://api2.openreview.net/*",
+    "https://api.openreview.net/*",
     "https://arxiv.org/*"
   ],
   "background": {
