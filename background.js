@@ -12,6 +12,8 @@ const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 const SEARCH_TIMEOUT_MS = 24000;
 const FORUM_TIMEOUT_MS = 20000;
 const BIBTEX_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+const SEARCH_DOM_WAIT_MS = 10000;
+const SEARCH_DOM_POLL_MS = 300;
 
 const inflight = new Map();
 const bibtexInflight = new Map();
@@ -128,7 +130,7 @@ async function findMatchViaRenderedSearch(title) {
   const tab = await tabsCreate({ url: searchUrl, active: false });
   try {
     await waitForTabComplete(tab.id, 15000);
-    await sleep(1600);
+    await waitForSearchDOM(tab.id, SEARCH_DOM_WAIT_MS, SEARCH_DOM_POLL_MS);
 
     const execRes = await scriptingExecute({ tabId: tab.id, func: scrapeRenderedSearchCards });
     const data = execRes?.result || execRes;
@@ -146,6 +148,21 @@ async function findMatchViaRenderedSearch(title) {
   } finally {
     try { await tabsRemove(tab.id); } catch {}
   }
+}
+
+async function waitForSearchDOM(tabId, maxWaitMs, pollMs) {
+  const start = Date.now();
+  while (Date.now() - start < maxWaitMs) {
+    try {
+      const execRes = await scriptingExecute({ tabId, func: inspectSearchDOMState });
+      const state = execRes?.result || execRes;
+      if (state?.hasForumCards || state?.hasNoResults) return true;
+    } catch {
+      // Ignore transient script-execution failures during page hydration.
+    }
+    await sleep(pollMs);
+  }
+  return false;
 }
 
 function scrapeRenderedSearchCards() {
@@ -183,6 +200,16 @@ function scrapeRenderedSearchCards() {
   }
 
   return { results, reason: results.length ? 'ok' : 'No forum results found in DOM' };
+}
+
+function inspectSearchDOMState() {
+  const forumLinks = document.querySelectorAll('a[href*="/forum?id="]').length;
+  const bodyText = (document.body?.innerText || '').replace(/\s+/g, ' ').toLowerCase();
+  const hasNoResults = /no results|no papers|no submissions|could not find/i.test(bodyText);
+  return {
+    hasForumCards: forumLinks > 0,
+    hasNoResults
+  };
 }
 
 async function scrapeForumVersionsAndVenue(forumId) {
