@@ -45,7 +45,10 @@ This extension automates that lookup and surfaces the result right next to the a
 
 ## Usage
 
-1. Go to an arXiv abstract page like `https://arxiv.org/abs/xxxx.xxxxx`.
+1. Go to an arXiv paper page like:
+- `https://arxiv.org/abs/xxxx.xxxxx`
+- `https://arxiv.org/pdf/xxxx.xxxxx.pdf`
+- `https://arxiv.org/html/xxxx.xxxxx`
 2. Wait for the `OpenReview` box to appear in the right column.
 3. Click `Open Forum` to open the matched forum.
 4. Use the versions list to open specific versions.
@@ -55,11 +58,12 @@ This extension automates that lookup and surfaces the result right next to the a
 ## Permissions explained
 
 - `storage`: cache lookup/BibTeX results locally
-- `tabs`: open background tabs for scraping OpenReview pages
-- `scripting`: execute extraction scripts in created tabs
+- `tabs`: read the active tab URL/context for popup behavior
 - Host permissions:
 - `https://arxiv.org/*`
 - `https://openreview.net/*`
+- `https://api.openreview.net/*`
+- `https://api2.openreview.net/*`
 
 ## Privacy
 
@@ -70,14 +74,14 @@ This extension automates that lookup and surfaces the result right next to the a
 ## Known limitations
 
 - Matching is title-based; if OpenReview title metadata differs significantly, lookup may fail.
-- OpenReview UI changes can affect scraping and may require extension updates.
-- BibTeX extraction depends on OpenReview page rendering and available controls.
+- Only public OpenReview entries are discoverable through unauthenticated API requests.
+- API availability/network restrictions can temporarily impact lookups.
 
 ## Project structure
 
 - `manifest.json`: extension manifest (MV3)
 - `content.js`, `content.css`: injected arXiv panel UI/logic
-- `background.js`: lookup, scraping, caching, BibTeX fetching
+- `background.js`: API lookup, caching, BibTeX fetch/generation
 - `popup.html`, `popup.js`, `popup.css`: toolbar popup UI/logic
 - `icons/`: extension icon assets
 
