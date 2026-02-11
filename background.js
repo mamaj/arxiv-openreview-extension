@@ -125,8 +125,9 @@ function buildSearchUrl(title) {
 }
 
 async function searchForumNotesByTitle(title) {
+  const safeQuery = buildSafeTitleQuery(title);
   const data = await apiGetPath('/notes/search', {
-    query: title,
+    query: safeQuery,
     content: 'title',
     source: 'forum',
     sort: 'cdate:desc',
@@ -134,6 +135,16 @@ async function searchForumNotesByTitle(title) {
   });
   const notes = Array.isArray(data?.notes) ? data.notes : [];
   return notes.filter(n => getForumId(n) && getNoteTitle(n));
+}
+
+function buildSafeTitleQuery(title) {
+  const raw = String(title || '').trim();
+  if (!raw) return raw;
+  return `"${escapeLuceneQuery(raw)}"`;
+}
+
+function escapeLuceneQuery(s) {
+  return String(s || '').replace(/([+\-!(){}\[\]^"~*?:\\/]|&&|\|\|)/g, '\\$1');
 }
 
 function buildVersionEntries(notes) {
