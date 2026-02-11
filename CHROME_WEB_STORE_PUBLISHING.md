@@ -10,7 +10,7 @@ This file contains:
 
 ### Short Description
 
-Find matching OpenReview forums from arXiv abstract pages and copy BibTeX in one click.
+Find matching OpenReview forums from arXiv pages and copy BibTeX in one click.
 
 ### Full Description
 
@@ -18,8 +18,8 @@ arXiv to OpenReview adds an OpenReview panel directly to arXiv abstract pages so
 
 What it does:
 
-- Detects paper title and arXiv ID on `arxiv.org/abs/*`
-- Finds matching OpenReview forum results by title
+- Detects arXiv paper context on `/abs`, `/pdf`, and `/html` pages
+- Finds matching OpenReview forum results using the public OpenReview API
 - Shows quick actions to open forum/search results
 - Lists available versions/venues when found
 - Lets you copy BibTeX with one click
@@ -33,7 +33,7 @@ Why it is useful:
 Notes:
 
 - Matching is title-based; if metadata differs significantly, matches may fail
-- OpenReview UI changes may require extension updates
+- Only public OpenReview entries are available without authentication
 
 ## 2) Release Checklist (Tailored to Current Manifest)
 
@@ -41,9 +41,9 @@ Current manifest snapshot (from this repo):
 
 - `manifest_version`: `3`
 - `name`: `arXiv to OpenReview`
-- `version`: `1.7.4`
-- `permissions`: `storage`, `tabs`, `scripting`
-- `host_permissions`: `https://openreview.net/*`, `https://arxiv.org/*`
+- `version`: `1.8.1`
+- `permissions`: `storage`, `tabs`
+- `host_permissions`: `https://openreview.net/*`, `https://api2.openreview.net/*`, `https://api.openreview.net/*`, `https://arxiv.org/*`
 - icons: `16`, `48`, `128`
 
 Pre-upload checks:
@@ -58,7 +58,10 @@ Pre-upload checks:
 - Add real screenshots under `screenshots/` for listing use.
 
 1. Verify runtime behavior:
-- Test on multiple `https://arxiv.org/abs/*` pages.
+- Test on multiple arXiv pages:
+  - `https://arxiv.org/abs/*`
+  - `https://arxiv.org/pdf/*.pdf`
+  - `https://arxiv.org/html/*`
 - Confirm popup works and no console errors in:
   - content script context
   - service worker (`background.js`)
@@ -67,11 +70,10 @@ Pre-upload checks:
 1. Privacy and permissions disclosure prep:
 - Explain why each permission is required:
   - `storage`: local cache
-  - `tabs`: open background tabs for lookup
-  - `scripting`: run extraction logic on loaded pages
+  - `tabs`: read active tab context for popup behavior
 - Explain host access:
-  - arXiv pages for injection
-  - OpenReview pages for lookup/scraping
+  - arXiv pages for page context/title resolution
+  - OpenReview hosts for API lookup/BibTeX retrieval
 
 1. Store listing readiness:
 - Short description
@@ -99,7 +101,7 @@ mkdir -p dist
 Create upload zip (excludes git metadata and macOS junk):
 
 ```bash
-zip -r dist/arxiv2openreview-v1.7.4.zip . \
+zip -r dist/arxiv2openreview-v1.8.1.zip . \
   -x "*.git*" \
   -x "dist/*" \
   -x "*.DS_Store" \
@@ -109,7 +111,7 @@ zip -r dist/arxiv2openreview-v1.7.4.zip . \
 Optional: validate zip contents quickly:
 
 ```bash
-unzip -l dist/arxiv2openreview-v1.7.4.zip | head -n 40
+unzip -l dist/arxiv2openreview-v1.8.1.zip | head -n 40
 ```
 
-Then upload `dist/arxiv2openreview-v1.7.4.zip` in the Chrome Web Store Developer Dashboard.
+Then upload `dist/arxiv2openreview-v1.8.1.zip` in the Chrome Web Store Developer Dashboard.
